@@ -1,0 +1,22 @@
+# Docker Compose file for defining the services (i.e. containers) in the Bucket list app. We define a service for the api/app code and another for the postgres DB.
+services:
+  buckets-api:
+    build:
+      context: .
+    depends-on:
+      - postgres-db
+    networks:
+      - default
+    ports:
+      - 8080:8080
+
+  postgres-db:
+    image: postgres
+    ports:
+      - 2625:2625
+      - 8080:8080
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
