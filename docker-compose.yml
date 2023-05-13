@@ -3,7 +3,8 @@ services:
   buckets-api:
     build:
       context: .
-    depends-on:
+    env_file: .env
+    depends_on:
       - postgres-db
     networks:
       - default
@@ -12,9 +13,10 @@ services:
 
   postgres-db:
     image: postgres
+    env_file:
+      - .env
     ports:
-      - 2625:2625
-      - 8080:8080
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
