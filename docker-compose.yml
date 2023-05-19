@@ -14,7 +14,7 @@ services:
   postgres-db:
     image: postgres
     env_file:
-      - .env
+      - .env # NB: Do not create an environment variable for a separate user. Instead use the image's default user, postgres and provide enviroment variables for the DB name and password.
     ports:
       - "5432:5432"
     volumes:
