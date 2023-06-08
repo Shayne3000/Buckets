@@ -25,7 +25,27 @@ func (db Database) AddItem(item *models.Item) error {
 }
 
 func (db Database) GetAllItems() (*models.ItemList, error) {
+	itemsList := &models.ItemList{}
 
+	rows, err := db.connection.Query("SELECT * FROM items ORDER BY ID DESC")
+
+	if err != nil {
+		return itemsList, err
+	}
+
+	for rows.Next() {
+		var item models.Item
+
+		err := rows.Scan(&item.ID, &item.Name, &item.Description, &item.CreatedAt)
+
+		if err != nil {
+			return itemsList, err
+		}
+
+		itemsList.Items = append(itemsList.Items, item)
+	}
+
+	return itemsList, nil
 }
 
 func (db Database) GetItemById(id int) (*models.Item, error) {
