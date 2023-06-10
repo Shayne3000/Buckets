@@ -22,7 +22,7 @@ var errorNoMatch = fmt.Errorf("The requested record does not exist in the table.
 func InitializeDB(username, password, database string) (Database, error) {
 	db := Database{}
 
-	// Data source name for the postgres driver name
+	// Data source name for the postgres driver
 	dbDSN := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, password, database)
 
 	conn, err := sql.Open("postgres", dbDSN)
