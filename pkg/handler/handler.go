@@ -1,7 +1,7 @@
 package handler
 
 //--
-// Setup the main router
+// Main router setup
 //--
 
 import (
@@ -12,12 +12,12 @@ import (
 	"github.com/go-chi/render"
 )
 
-var database db.Database
+var databaseInstance db.Database
 
 // Returns the router instance
 func NewRouter(db db.Database) http.Handler {
 	router := chi.NewRouter()
-	database = db
+	databaseInstance = db
 
 	// adding custom handlers for 404 and 405 errors
 	router.NotFound(notFound)

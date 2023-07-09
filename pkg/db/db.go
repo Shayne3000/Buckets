@@ -1,5 +1,9 @@
 package db
 
+//--
+// Database Setup
+//--
+
 import (
 	"database/sql"
 	"fmt"

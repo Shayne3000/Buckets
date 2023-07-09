@@ -33,19 +33,19 @@ func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 // Generic business logic error response instance to be used across route handlers
 func RenderServerError(err error) render.Renderer {
 	return &ErrorResponse{
-		Err:        err,
-		StatusCode: 500,
-		StatusText: "Internal server error",
-		Message:    err.Error(),
+		Err: err,
+        StatusCode: 500,
+        StatusText: "Internal server error",
+        Message: err.Error(),
 	}
 }
 
-// Generic error response for invalid requests
+// Generic error response for invalid/bad requests
 func RenderInvalidRequestError(err error) render.Renderer {
 	return &ErrorResponse{
-		Err:        err,
+		Err: err,
 		StatusCode: 400,
 		StatusText: "Invalid Request",
-		Message:    err.Error(),
+		Message: err.Error(),
 	}
 }

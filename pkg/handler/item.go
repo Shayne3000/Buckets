@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Shayne3000/Buckets/pkg/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 )
@@ -58,4 +59,27 @@ func ItemsCtx(next http.Handler) http.Handler {
 		// call the next handler in the chain
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+// Create a bucket list item
+func createItem(w http.ResponseWriter, r *http.Request) {
+	// instance of the item struct 
+	item := &models.Item{}
+
+	// Use render.Bind to decode/unmarshall the request body into an Item model for insertion into the DB.
+	if err := render.Bind(r, item); err != nil {
+		render.Render(w, r, RenderInvalidRequestError(err))
+		return
+	}
+
+	// Insert into the DB
+	if err := databaseInstance.AddItem(item); err != nil {
+		render.Render(w, r, RenderServerError(err))
+		return
+	}
+
+	// Return the created item to tell the user that the request was successful
+	if err := render.Render(w, r, item); err != nil {
+		render.Render(w, r, RenderServerError(err))
+	}
 }
