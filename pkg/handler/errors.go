@@ -1,8 +1,14 @@
 package handler
 
 //--
-// Error response payloads & renderers
+// File that holds the Error response model & renderers that will render said error model instance in JSON for the client using Chi.Render.
 //--
+
+import (
+	"net/http"
+
+	"github.com/go-chi/render"
+)
 
 // the base error response model
 type ErrorResponse struct {
@@ -12,10 +18,34 @@ type ErrorResponse struct {
 	Message    string `json:"message"`     // error message for user that usually has more detail.
 }
 
-// Various ErrorResponse instances representing the kinds of errors prevalent in the app.
-// A struct is like a POJO class to create an instance of the struct, you basically set up a pointer to the value of the struct of type "something"
+// Various ErrorResponse instances representing the generic HTTP errors prevalent in the app.
+// A struct is like a POJO class. To create an instance of the struct, you basically set up a pointer to the value of the struct of a given type
 var (
 	ErrorNotFound         = &ErrorResponse{StatusCode: 404, Message: "Resource not found."}
 	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, Message: "Method not allowed."}
-	ErrorBadRequest       = &ErrorResponse{StatusCode: 400, Message: "Bad request."}
 )
+
+func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
+	render.Status(r, e.StatusCode)
+	return nil
+}
+
+// Generic business logic error response instance to be used across route handlers
+func RenderServerError(err error) render.Renderer {
+	return &ErrorResponse{
+		Err:        err,
+		StatusCode: 500,
+		StatusText: "Internal server error",
+		Message:    err.Error(),
+	}
+}
+
+// Generic error response for invalid requests
+func RenderInvalidRequestError(err error) render.Renderer {
+	return &ErrorResponse{
+		Err:        err,
+		StatusCode: 400,
+		StatusText: "Invalid Request",
+		Message:    err.Error(),
+	}
+}

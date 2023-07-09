@@ -1,6 +1,9 @@
 package db
 
-// file responsible for interacting with the Items table in terms of CRUD ops with the item model.
+//--
+// File that holds interactions with the Items table in terms of CRUD ops with the item model.
+//--
+
 import (
 	"database/sql"
 

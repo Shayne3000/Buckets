@@ -1,5 +1,9 @@
 package models
 
+//--
+// Item model
+//--
+
 import (
 	"fmt"
 	"net/http"
@@ -27,6 +31,7 @@ func (item *Item) Bind(r *http.Request) error {
 }
 
 // Set the pointer type *Item to implement the Render interface from Chi.Render
+// so that we can use render to package and/or transform the Item struct to JSON in response to the client request.
 func (item *Item) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }

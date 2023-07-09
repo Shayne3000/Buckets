@@ -1,5 +1,9 @@
 package handler
 
+//--
+// Setup the main router
+//--
+
 import (
 	"net/http"
 
