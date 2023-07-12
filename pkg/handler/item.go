@@ -83,3 +83,45 @@ func createItem(w http.ResponseWriter, r *http.Request) {
 		render.Render(w, r, RenderServerError(err))
 	}
 }
+
+// Get all bucket list items
+func getAllItems(w http.ResponseWriter, r *http.Request) {
+	items, err := databaseInstance.GetAllItems()
+
+	if err != nil {
+		render.Render(w, r, RenderServerError(err))
+		return
+	}
+
+	// Return the requested bucket list items to tell the user that the request was successful.
+	if err := render.Render(w, r, items); err != nil {
+		render.Render(w, r, RenderServerError(err))
+	}
+}
+
+// Get a bucket list item given its id
+func getItem(w http.ResponseWriter, r *http.Request) {
+	// Retrieve the item ID URL parameter that was stored in the request context by the ItemsContext middleware.
+	itemId := r.Context().Value(itemIDKey).(int)
+
+	// Retrieve item from the DB
+	item, err := databaseInstance.GetItemById(itemId)
+
+	if err != nil {
+		if err == errorNoMatch {
+			render.Render(W, R, ErrorNotFound)
+		} else {
+			render.Render(w, r, RenderInvalidRequestError(err))
+		}
+		return
+	}
+
+	// Return the requested items to the user
+	if err := render.Render(w, r, &item); err != nil {
+		render.Render(w, r, RenderServerError(err))
+	}
+}
+
+func updateItem(w http.ResponseWriter, r *http.Request) {
+	itemId := r.Context().Value(itemIDKey).(int)
+}
