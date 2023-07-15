@@ -23,7 +23,7 @@ type Database struct {
 	connection *sql.DB
 }
 
-var errorNoMatch = fmt.Errorf("the requested record does not exist in the table")
+var ErrorNoMatch = fmt.Errorf("the requested record does not exist in the table")
 
 func InitializeDB(username, password, database string) (Database, error) {
 	db := Database{}

@@ -21,8 +21,8 @@ type ErrorResponse struct {
 // Various ErrorResponse instances representing the generic HTTP errors prevalent in the app.
 // A struct is like a POJO class. To create an instance of the struct, you basically set up a pointer to the value of the struct of a given type
 var (
-	ErrorNotFound         = &ErrorResponse{StatusCode: 404, Message: "Resource not found."}
-	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, Message: "Method not allowed."}
+	ErrorNotFound         = &ErrorResponse{StatusCode: 404, Message: "resource not found"}
+	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, Message: "method not allowed"}
 )
 
 func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
@@ -35,7 +35,7 @@ func RenderServerError(err error) render.Renderer {
 	return &ErrorResponse{
 		Err: err,
         StatusCode: 500,
-        StatusText: "Internal server error",
+        StatusText: "internal server error",
         Message: err.Error(),
 	}
 }
@@ -45,7 +45,7 @@ func RenderInvalidRequestError(err error) render.Renderer {
 	return &ErrorResponse{
 		Err: err,
 		StatusCode: 400,
-		StatusText: "Invalid Request",
+		StatusText: "invalid Request",
 		Message: err.Error(),
 	}
 }

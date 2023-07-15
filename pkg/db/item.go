@@ -62,7 +62,7 @@ func (db Database) GetItemById(id int) (models.Item, error) {
 
 	switch err := row.Scan(&item.ID, &item.Name, &item.Description, &item.CreatedAt); err {
 	case sql.ErrNoRows:
-		return item, errorNoMatch
+		return item, ErrorNoMatch
 
 	default:
 		return item, err
@@ -78,7 +78,7 @@ func (db Database) UpdateItem(itemId int, itemData models.Item) (models.Item, er
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return item, errorNoMatch
+			return item, ErrorNoMatch
 		}
 
 		return item, err
@@ -94,7 +94,7 @@ func (db Database) DeleteItem(itemId int) error {
 
 	switch err {
 	case sql.ErrNoRows:
-		return errorNoMatch
+		return ErrorNoMatch
 	default:
 		return err
 	}
