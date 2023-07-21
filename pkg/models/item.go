@@ -1,7 +1,7 @@
 package models
 
 //--
-// Item model
+// Model for the Bucket list item resource
 //--
 
 import (
@@ -21,7 +21,7 @@ type ItemList struct {
 }
 
 // Set the pointer type *Item to implement the Binder interface from Chi.Render
-// so as to be able to decode/unmarshall the request body into an Item struct before 
+// so as to be able to decode/unmarshall the request body into an Item struct before
 // any performing any DB ops on it.
 
 // Bind will run after unmarshalling is complete. We
@@ -35,12 +35,13 @@ func (item *Item) Bind(r *http.Request) error {
 }
 
 // Set the pointer type *Item to implement the Renderer interface from Chi.Render
-// so that we can use render to package/transform the Item struct as a JSON response to the client request.
+// so that we can use render to transform the Item struct to become the JSON response for the client's request.
 func (item *Item) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
 // Set the pointer type *ItemList to implement the Render interface from Chi.Render
+// so we can package the list of items in the ItemList struct as the JSON response to the client's request.
 func (itemList *ItemList) Render(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }

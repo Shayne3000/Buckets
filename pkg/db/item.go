@@ -1,7 +1,7 @@
 package db
 
 //--
-// File that holds interactions with the Items table in terms of CRUD ops with the item model.
+// File that holds CRUD interactions with the item resource in the Items table.
 //--
 
 import (

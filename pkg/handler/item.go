@@ -18,6 +18,7 @@ import (
 )
 
 // A custom string type called itemID used as the type for the key used to store itemId in the request context.
+// See this: https://forum.golangbridge.org/t/the-way-to-set-a-context-key-and-value/16311
 type itemID string
 
 // Key used for passing the itemId URL parameter across API boundaries/.middlewares and request handlers using Go's context.
