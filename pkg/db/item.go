@@ -17,7 +17,7 @@ func (db Database) AddItem(item *models.Item) error {
 
 	query := `INSERT INTO items (name, description) VALUES ($1 $2) RETURNING id, created_at;`
 
-	err := db.connection.QueryRow(query, item.Name, item.Description).Scan(&id, &created_at)
+	err := db.Connection.QueryRow(query, item.Name, item.Description).Scan(&id, &created_at)
 
 	if err != nil {
 		return err
@@ -33,7 +33,7 @@ func (db Database) GetAllItems() (*models.ItemList, error) {
 	itemsList := &models.ItemList{}
 
 	// Todo Change the order to ascending
-	rows, err := db.connection.Query("SELECT * FROM items ORDER BY ID DESC;")
+	rows, err := db.Connection.Query("SELECT * FROM items ORDER BY ID DESC;")
 
 	if err != nil {
 		return itemsList, err
@@ -59,7 +59,7 @@ func (db Database) GetItemById(id int) (models.Item, error) {
 
 	query := `SELECT * FROM items WHERE id = $1;`
 
-	row := db.connection.QueryRow(query, id)
+	row := db.Connection.QueryRow(query, id)
 
 	switch err := row.Scan(&item.ID, &item.Name, &item.Description, &item.CreatedAt); err {
 	case sql.ErrNoRows:
@@ -75,7 +75,7 @@ func (db Database) UpdateItem(itemId int, itemData models.Item) (models.Item, er
 
 	query := `UPDATE items SET name=$1, description=$2 WHERE id=$3 RETURNING id, name, description, created_at;`
 
-	err := db.connection.QueryRow(query, itemData.Name, itemData.Description, itemId).Scan(&item.ID, &item.Name, &item.Description, &item.CreatedAt)
+	err := db.Connection.QueryRow(query, itemData.Name, itemData.Description, itemId).Scan(&item.ID, &item.Name, &item.Description, &item.CreatedAt)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -91,7 +91,7 @@ func (db Database) UpdateItem(itemId int, itemData models.Item) (models.Item, er
 func (db Database) DeleteItem(itemId int) error {
 	query := `DELETE FROM items WHERE id=$1;`
 
-	_, err := db.connection.Exec(query, itemId)
+	_, err := db.Connection.Exec(query, itemId)
 
 	switch err {
 	case sql.ErrNoRows:

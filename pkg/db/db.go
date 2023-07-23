@@ -20,16 +20,16 @@ const (
 )
 
 type Database struct {
-	connection *sql.DB
+	Connection *sql.DB
 }
 
 var ErrorNoMatch = fmt.Errorf("the requested record does not exist in the table")
 
-func InitializeDB(username, password, database string) (Database, error) {
+func InitializeDB(username string) (Database, error) {
 	db := Database{}
 
 	// Data source name for the postgres driver
-	dbDSN := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, password, database)
+	dbDSN := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, PASSWORD, DB_NAME)
 
 	conn, err := sql.Open("postgres", dbDSN)
 
@@ -37,8 +37,8 @@ func InitializeDB(username, password, database string) (Database, error) {
 		return db, err
 	}
 
-	db.connection = conn
-	err = db.connection.Ping()
+	db.Connection = conn
+	err = db.Connection.Ping()
 
 	if err != nil {
 		return db, err

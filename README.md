@@ -1,5 +1,5 @@
 # Buckets
-A RESTful API for managing bucket lists built in Go. 
+A RESTful API for creating bucket lists built in Go. 
 
 ## Technologies
 
