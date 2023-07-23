@@ -25,7 +25,8 @@ var (
 	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, Message: "method not allowed"}
 )
 
-// Declare the Render method on the *ErrorResponse type so now *ErrorResponse implements the Render interface
+// Declare the Render method on the *ErrorResponse type so now *ErrorResponse implements the Renderer interface
+// As such Render can transform the ErrorResponse struct to JSON in responding to a client's request.
 func (e *ErrorResponse) Render(w http.ResponseWriter, r *http.Request) error {
 	render.Status(r, e.StatusCode)
 	return nil

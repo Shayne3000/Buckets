@@ -1,7 +1,7 @@
 package handler
 
 //--
-// File responsible for handling CRUD HTTP requests to the item resource in the DB that come through the /items path.
+// File responsible for handling HTTP requests to the /items path to perform CRUD ops on the item resource in the DB.
 // It holds the items sub router, the items context http middleware, and the handler functions for the HTTP requests that come to the /items path
 //--
 
@@ -21,14 +21,15 @@ import (
 // See this: https://forum.golangbridge.org/t/the-way-to-set-a-context-key-and-value/16311
 type itemID string
 
-// Key used for passing the itemId URL parameter across API boundaries/.middlewares and request handlers using Go's context.
+// Key used to store and pass the itemId URL parameter across API boundaries/request handlers using Go's context.
 var itemIDKey itemID = "ItemID"
 
 // Sub-router that handles all HTTP requests routed to the "/items" path.
 func items(router chi.Router) {
 	// TODO Add paginate to the GetAll request.
-	router.Get("/", getAllItems) // read as tell the router to handle GET requests to the root path using the getAllItems handler.
+	router.Get("/", getAllItems) // read as tell the router to handle GET requests to the root /items/ path using the getAllItems handler.
 	router.Post("/", createItem)
+	// route all requests with the itemId URL parameter to the sub-router
 	router.Route("/{itemId}", func(r chi.Router) {
 		router.Use(ItemsCtx)
 		router.Get("/", getItem)
@@ -41,12 +42,12 @@ func items(router chi.Router) {
 // and saves it in the request context for use across API boundaries i.e. in several handlers.
 func ItemsCtx(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// fetch the parameter at runtime
+		// fetch the URL parameter at runtime
 		itemId := chi.URLParam(r, "itemId")
 
 		// verifies that the id exists
 		if itemId == "" {
-			render.Render(w, r, RenderInvalidRequestError(fmt.Errorf("item Id is required")))
+			render.Render(w, r, RenderInvalidRequestError(fmt.Errorf("item id is required")))
 			return
 		}
 
@@ -55,10 +56,10 @@ func ItemsCtx(next http.Handler) http.Handler {
 
 		// verify that the id is valid
 		if err != nil {
-			render.Render(w, r, RenderInvalidRequestError(fmt.Errorf("invalid item Id")))
+			render.Render(w, r, RenderInvalidRequestError(fmt.Errorf("invalid item id")))
 		}
 
-		// Add the itemId to the request context using the itemIDKey to persist it across API boundaries
+		// Add the itemId to the request context using the itemIDKey so as to persist and use it across API boundaries
 		ctx := context.WithValue(r.Context(), itemIDKey, id)
 
 		// call the next handler in the chain
@@ -68,7 +69,7 @@ func ItemsCtx(next http.Handler) http.Handler {
 
 // Create a bucket list item
 func createItem(w http.ResponseWriter, r *http.Request) {
-	// instance of the item struct
+	// instance of a pointer to the item struct
 	item := &models.Item{}
 
 	// Use render.Bind to decode/unmarshall the request body into an Item model for insertion into the DB.
@@ -98,7 +99,7 @@ func getAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Return the requested bucket list items to tell the user that the request was successful.
+	// Return the requested bucket list items if the request was successful.
 	if err := render.Render(w, r, items); err != nil {
 		render.Render(w, r, RenderServerError(err))
 	}
@@ -140,7 +141,7 @@ func updateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Update the item in database given its itemId
+	// Update the item in database with the decoded updatedItemData given its itemId
 	item, err := databaseInstance.UpdateItem(itemId, updatedItemData)
 
 	if err != nil {
@@ -152,7 +153,7 @@ func updateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Return the updated item to indicate that the request was successful
+	// Return the updated item to the client to indicate that the request was successful
 	if err := render.Render(w, r, &item); err != nil {
 		render.Render(w, r, RenderServerError(err))
 	}
@@ -163,6 +164,7 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 	// Get the item id URL parameter from the request context
 	itemId := r.Context().Value(itemIDKey).(int)
 
+	// delete the item in database with the provided id
 	err := databaseInstance.DeleteItem(itemId)
 
 	if err != nil {

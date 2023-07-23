@@ -32,6 +32,7 @@ func (db Database) AddItem(item *models.Item) error {
 func (db Database) GetAllItems() (*models.ItemList, error) {
 	itemsList := &models.ItemList{}
 
+	// Todo Change the order to ascending
 	rows, err := db.connection.Query("SELECT * FROM items ORDER BY ID DESC;")
 
 	if err != nil {
