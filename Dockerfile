@@ -5,7 +5,7 @@
 ##
 
 # Use the Go official container image (with the alias app-builder) which contains everything needed to compile and run go apps) as the base image for the build stage. 
-FROM golang:1.20 AS app-builder
+FROM golang:1.20-alpine AS app-builder
 
 # Copy all the files and directories as it is on your project and add them to the specified directory path (2nd argument) in the image's filesystem 
 ADD . /go/src/github.com/Shayne3000/Buckets/

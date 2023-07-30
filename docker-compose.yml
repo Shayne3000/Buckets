@@ -12,7 +12,7 @@ services:
       - 8080:8080
 
   postgres-db:
-    image: postgres
+    image: postgres # TODO: Set the network "buckets_default" for the db service so that the api service can connect to the db service as they have to be on the same network to connect.
     env_file:
       - .env # NB: Do not create an environment variable for a separate user. Instead use the image's default user, postgres and provide enviroment variables for the DB name and password.
     ports:
