@@ -31,10 +31,10 @@ func items(router chi.Router) {
 	router.Post("/", createItem)
 	// route all requests with the itemId URL parameter to the sub-router
 	router.Route("/{itemId}", func(r chi.Router) {
-		router.Use(ItemsCtx)
-		router.Get("/", getItem)
-		router.Put("/", updateItem)
-		router.Delete("/", deleteItem)
+		r.Use(ItemsCtx)
+		r.Get("/", getItem)
+		r.Put("/", updateItem)
+		r.Delete("/", deleteItem)
 	})
 }
 

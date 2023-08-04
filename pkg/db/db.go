@@ -8,15 +8,14 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
 const (
-	HOST     = "postgres-db"
-	PORT     = 5432
-	PASSWORD = "buck"
-	DB_NAME  = "buckets_db"
+	HOST = "postgres-db"
+	PORT = 5432
 )
 
 type Database struct {
@@ -28,10 +27,10 @@ var ErrorNoMatch = fmt.Errorf("the requested record does not exist in the table"
 func InitializeDB(username string) (Database, error) {
 	db := Database{}
 
-	// Data source name for the postgres driver
-	dbDSN := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, PASSWORD, DB_NAME)
+	// Connection string to connect to the DB
+	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, username, os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB"))
 
-	conn, err := sql.Open("postgres", dbDSN)
+	conn, err := sql.Open("postgres", connectionString)
 
 	if err != nil {
 		return db, err

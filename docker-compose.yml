@@ -5,14 +5,19 @@ services:
       context: .
     env_file: .env
     depends_on:
-      - postgres-db
-    networks:
-      - default
+      postgres-db: # wait for the db to be started and running properly before starting the api service else DB ping would fail and the API would have no DB to which to connect
+        condition: service_healthy
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080 # Specify a connection from/expose the container's 8080 port to the localhost's 8080 port when running locally. For server, leave it as 8080:8080.
+      # It is imperative to specify that the port on the host you're connecting from is the localhost's else it won't work as Docker runs in an environment isolated from the host.
 
   postgres-db:
     image: postgres # TODO: Set the network "buckets_default" for the db service so that the api service can connect to the db service as they have to be on the same network to connect.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     env_file:
       - .env # NB: Do not create an environment variable for a separate user. Instead use the image's default user, postgres and provide enviroment variables for the DB name and password.
     ports:
