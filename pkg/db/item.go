@@ -15,7 +15,7 @@ func (db Database) AddItem(item *models.Item) error {
 
 	var created_at string
 
-	query := `INSERT INTO items (name, description) VALUES ($1 $2) RETURNING id, created_at;`
+	query := `INSERT INTO items (name, description) VALUES ($1, $2) RETURNING id, created_at;`
 
 	err := db.Connection.QueryRow(query, item.Name, item.Description).Scan(&id, &created_at)
 
