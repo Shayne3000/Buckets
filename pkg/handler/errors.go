@@ -21,8 +21,8 @@ type ErrorResponse struct {
 // Various instances of ErrorResponse representing the generic HTTP errors prevalent in the app.
 // A struct is like a POJO class. To create an instance of the struct, you basically set up a pointer to the struct of a given type with its elements as literals.
 var (
-	ErrorNotFound         = &ErrorResponse{StatusCode: 404, Message: "resource not found"}
-	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, Message: "method not allowed"}
+	ErrorNotFound         = &ErrorResponse{StatusCode: 404, StatusText: "404 NOT FOUND", Message: "resource not found"}
+	ErrorMethodNotAllowed = &ErrorResponse{StatusCode: 405, StatusText: "405 NOT ALLOWED", Message: "method not allowed"}
 )
 
 // Declare the Render method on the *ErrorResponse type so now *ErrorResponse implements the Renderer interface
